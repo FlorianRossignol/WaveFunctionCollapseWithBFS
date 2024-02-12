@@ -13,6 +13,7 @@ public class MapCell
     public bool isVisited = false;
     
     public List<Vector2Int> AdjacentCellsPositions { get; private set; }
+    public List<MapCell> AdjacentCellsPositionsMapCells { get; private set; }
 
     private Map _map;
     private Dictionary<MapCell, MapModuleState[]> _mapCellCashe = new Dictionary<MapCell, MapModuleState[]>();
@@ -22,9 +23,9 @@ public class MapCell
         States = states;
         PositionInMap = positionInMap;
         AdjacentCellsPositions = GetAdjacentCellsPositions(map);
-
         _map = map;
     }
+    
     
 
     List<Vector2Int> GetAdjacentCellsPositions(Map map)
@@ -34,6 +35,16 @@ public class MapCell
         if (PositionInMap.x + 1 < map.RowsCount) cells.Add(new Vector2Int(PositionInMap.x+1, PositionInMap.y));
         if (PositionInMap.y - 1 >= 0) cells.Add(new Vector2Int(PositionInMap.x, PositionInMap.y-1));
         if (PositionInMap.y + 1 < map.ColumnsCount) cells.Add(new Vector2Int(PositionInMap.x, PositionInMap.y+1));
+        return cells;
+    }
+    
+    List<MapCell> getAdjacentCellsPositionsMapCells(Map map)
+    {
+        List<MapCell> cells = new List<MapCell>();
+        if (PositionInMap.x - 1 >= 0) cells.Add(new MapCell(map,new Vector2Int(PositionInMap.x-1,PositionInMap.y),States));
+        if (PositionInMap.x + 1 < map.RowsCount) cells.Add(new MapCell(map,new Vector2Int(PositionInMap.x+1, PositionInMap.y),States));
+        if (PositionInMap.y - 1 >= 0) cells.Add(new MapCell(map,new Vector2Int(PositionInMap.x, PositionInMap.y-1),States));
+        if (PositionInMap.y + 1 < map.ColumnsCount) cells.Add(new MapCell(map,new Vector2Int(PositionInMap.x, PositionInMap.y+1),States));
         return cells;
     }
 
@@ -120,14 +131,14 @@ public class MapCell
     public List<MapCell> navigateableNeighbours()
     {
         var result = new List<MapCell>();
-        List<Vector2Int> cells = new List<Vector2Int>();
-        foreach (var neighbours in AdjacentCellsPositions)
+        AdjacentCellsPositionsMapCells = getAdjacentCellsPositionsMapCells(_map);
+        foreach (var neighbours in AdjacentCellsPositionsMapCells )
         {
             isVisited = true;
-            cells.Add(neighbours);
+            result.Add(neighbours);
             return result;
         }
-        return isVisited == true ? result : result;
+        return result;
     }
     
 }

@@ -122,21 +122,20 @@ public class Map : MonoBehaviour
                 queue.Enqueue(v);
                 var first = queue.Peek();
                 var localPosition = new Vector3(i * _CellSize, 0, j * _CellSize);
-                if (v == first)
+                /*if (v == first)
                 {
                     MapCellsMatrix[i,j].States[0].InstantiateSpecificPrefab(this,localPosition,_firstMapModule);
-                }
+                }*/
                 while (queue.Count > 0)
                 {
-                    var current = queue.Dequeue();
-                    v = current;
-                    while (current != null && !v.isVisited)
+                    v = queue.Dequeue();
+                    while (v.isVisited == false)
                     {
                         foreach (var variableNeighbour in v.navigateableNeighbours())
                         {
-                            MapCellsMatrix[i,j].States[0].InstantiateSpecificPrefab(this,localPosition,_pathMapModule);
+                            //MapCellsMatrix[i,j].States[0].InstantiateSpecificPrefab(this,localPosition,_pathMapModule);
                             queue.Enqueue(variableNeighbour);
-                            MapCellsMatrix[i,j].States[0].InstantiateSpecificPrefab(this,localPosition,_endMapModule);
+                            //MapCellsMatrix[i,j].States[0].InstantiateSpecificPrefab(this,localPosition,_endMapModule);
                         }
                     }
                 }
