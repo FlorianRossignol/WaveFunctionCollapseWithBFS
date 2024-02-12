@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7444931823100949232
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8925910665426819158}
+  - component: {fileID: 1945584741469305949}
+  m_Layer: 0
+  m_Name: Map
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8925910665426819158
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7444931823100949232}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.44749832, y: 1.7589388, z: -0.63787174}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1945584741469305949
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7444931823100949232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92de197386311a34e91fbc2792ecb7b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _MapSize: {x: 25, y: 25}
+  _CellSize: 3
+  _mapModules:
+  - {fileID: -5133317323801039679, guid: b5eb7153b0d399b49b8f801349d0e803, type: 3}
+  - {fileID: -6154591414272952402, guid: c168898a7eacc1449b9b5f0fe4a5a541, type: 3}
+  - {fileID: 4045276989218320753, guid: 76f73c1dca0d2d04ea63695e8876c300, type: 3}
+  - {fileID: -7896689432266488803, guid: 2dcb0a1a99958c149a168affbff986ea, type: 3}
+  _ContactType:
+  - _contactType: Ground
+    _notSuitableContactTypes:
+    - WallOnRight
+    - WallOnLeft
+    - GateOnRight
+    - GateOnLeft
+  - _contactType: Gate
+    _notSuitableContactTypes:
+    - Wall
+  - _contactType: GateOnRight
+    _notSuitableContactTypes:
+    - GateOnRight
+    - GateOnLeft
+    - WallOnRight
+  - _contactType: GateOnLeft
+    _notSuitableContactTypes:
+    - GateOnLeft
+    - GateOnRight
+    - WallOnLeft
+  - _contactType: WallOnRight
+    _notSuitableContactTypes:
+    - WallOnRight
+  - _contactType: WallOnLeft
+    _notSuitableContactTypes:
+    - WallOnLeft
+  - _contactType: Wall
+    _notSuitableContactTypes: []
+  _firstMapModule: {fileID: -5133317323801039679, guid: cd292b408b93f3542b6fcd2c577379ca, type: 3}
+  _endMapModule: {fileID: -5133317323801039679, guid: 0dd93bf2628cd3e46969bf0c53821394, type: 3}
+  _pathMapModule: {fileID: -6154591414272952402, guid: ff0b690f28c0555408a2eb02fb7fc4ad, type: 3}
