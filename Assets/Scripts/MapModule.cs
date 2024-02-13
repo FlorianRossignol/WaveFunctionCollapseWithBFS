@@ -9,6 +9,7 @@ using UnityEngine;
 public class MapModule : MonoBehaviour
 {
     [SerializeField] private Map _map;
+    public Vector3 Rotation { get; private set; }
 
     [SerializeField] private string _forwardContactType;
 
@@ -58,6 +59,15 @@ public class MapModule : MonoBehaviour
         }
         return mapModules;
         
+    }
+    
+    public void InstantiateSpecificPrefab(Map map, Vector3 localPosition, MapModule prefab)
+    {
+        
+            var go = MonoBehaviour.Instantiate(prefab);
+            go.transform.parent = map.transform;
+            go.transform.localPosition = localPosition;
+            go.transform.Rotate(Rotation);
     }
     
 }

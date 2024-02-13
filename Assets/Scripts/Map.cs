@@ -10,9 +10,9 @@ using Random = UnityEngine.Random;
 
 public class Map : MonoBehaviour
 {
-    [SerializeField] private Vector2Int _MapSize = new Vector2Int(5, 5);
+    [SerializeField] public Vector2Int _MapSize = new Vector2Int(5, 5);
 
-    [SerializeField] private float _CellSize;
+    [SerializeField] public float _CellSize;
 
     [SerializeField] private MapModule[] _mapModules;
     
@@ -42,11 +42,10 @@ public class Map : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.L))
         {
-            InitializeMap2();
-            CreateMapBfs();
-            //InitializeMap();
-            //FillCells();
-            //CreateMap();
+            InitializeMap();
+            FillCells();
+            //CreateMapBfs();
+            CreateMap();
         }
     }
 
@@ -78,7 +77,7 @@ public class Map : MonoBehaviour
         {
             for (int j = 0; j < _MapSize.y; j++)
             {
-               MapCellsMatrix2[i, j] = new MapCell(this, new Vector2Int(i, j));
+               MapCellsMatrix2[i, j] = new MapCell(this, new Vector2Int(i, j),mapModules);
             }
         }
 
@@ -111,11 +110,17 @@ public class Map : MonoBehaviour
 
     void CreateMap()
     {
+        var startModule = new Vector3(0, 0, 0);
+        var endModule = new Vector3(_MapSize.x, 0, _MapSize.y);
+        //var endModule = new Vector2(_MapSize.x, _MapSize.y);
         for (int i = 0; i < _MapSize.x; i++)
         {
             for (int j = 0; j < _MapSize.y; j++)
             {
                 var localPosition = new Vector3(i * _CellSize, 0, j * _CellSize);
+                _firstMapModule.InstantiateSpecificPrefab(this,startModule,_firstMapModule);
+                _endMapModule.InstantiateSpecificPrefab(this,endModule,_endMapModule);
+                BFS(MapCellsMatrix[i,j],localPosition);
                 MapCellsMatrix[i,j].States[0].InstantiatePrefab(this,localPosition);
             }
         }
@@ -127,7 +132,8 @@ public class Map : MonoBehaviour
         {
             for (int j = 0; j < _MapSize.y; j++)
             {
-                BFS(MapCellsMatrix2[i,j]);
+                var localPosition = new Vector3(i * _CellSize, 0, j * _CellSize);
+                BFS(MapCellsMatrix[i,j],localPosition);
             }
         }
     }
@@ -149,51 +155,36 @@ public class Map : MonoBehaviour
         return _ContactType.First(contact => contact.ContactTypes == contactType);
     }
     
-   public void BFS(MapCell v)
+   public void BFS(MapCell v, Vector3 localPosition)
    {
        //TODO profiler et avoir un résultat positif
         Queue<MapCell> queue = new Queue<MapCell>();
         
-        for (int i = 0; i < _MapSize.x; i++)
+        v.isVisited = true;
+        queue.Enqueue(v);
+        //_firstMapModule.InstantiateSpecificPrefab(this,localPosition,_firstMapModule);
+        
+        while (queue.Count > 0)
         {
-            for (int j = 0; j < _MapSize.y; j++)
+            v = queue.Dequeue();
+            
+            foreach (var variableNeighbour in v.navigateableNeighbours())
             {
-                v.isVisited = true;
-                queue.Enqueue(v);
-                //var first = queue.Peek();
-                var localPosition = new Vector3(i * _CellSize, 0, j * _CellSize);
-                MapCellsMatrix2[i,j].States[0].InstantiateSpecificPrefab(this,localPosition,_firstMapModule);
-                while (queue.Count > 0)
+                if (v.navigateableNeighbours().Count == 0)
                 {
-                    v = queue.Dequeue();
-                    
-                    foreach (var variableNeighbour in v.navigateableNeighbours())
-                    {
-                        if (variableNeighbour.isVisited == false)
-                        {
-                           MapCellsMatrix2[i,j].States[0].InstantiateSpecificPrefab(this,localPosition,_pathMapModule);
-                            queue.Enqueue(variableNeighbour);
-                            MapCellsMatrix2[i,j].States[0].InstantiateSpecificPrefab(this,localPosition,_endMapModule);
-                        }
-                    
-                    }
-                    
+                    Debug.LogError("neighbour is empty");
                 }
+                if (variableNeighbour.isVisited == false)
+                {
+                    //_pathMapModule.InstantiateSpecificPrefab(this,localPosition,_pathMapModule);
+                    queue.Enqueue(variableNeighbour); 
+                    variableNeighbour.isVisited = true;
+                    //Debug.Log(queue.Peek());
+                    //_endMapModule.InstantiateSpecificPrefab(this,localPosition,_endMapModule);
+                }
+            
             }
-        
-            /*LinkedList<int> linkedList = new LinkedList<int>();
-            LinkedListNode<int> currentNode = linkedList.First;
-            while (currentNode != null && !Visited[currentNode.Value])
-            {
-        
-                //instanciate specific prefab
-                _pathMapModule.InstantiatePrefab(this, localPosition);
-                queue.Enqueue(currentNode.Value);
-                Visited[currentNode.Value] = true;
-                currentNode = currentNode.Next;
-                _endMapModule.InstantiatePrefab(this, localPosition);
-            }*/
         }
-    }
+   }
     
 }

@@ -12,6 +12,7 @@ public class MapCell
     public List<MapModule> Modules { get; private set; }
     public bool isVisited = false;
     
+    
     public List<Vector2Int> AdjacentCellsPositions { get; private set; }
     public List<MapCell> AdjacentCellsPositionsMapCells { get; private set; }
 
@@ -26,9 +27,11 @@ public class MapCell
         _map = map;
     }
 
-    public MapCell(Map map, Vector2Int positionInMap)
+    public MapCell(Map map, Vector2Int positionInMap,List<MapModule> mapModule)
     {
         PositionInMap = positionInMap;
+        Modules = mapModule;
+        AdjacentCellsPositionsMapCells = getAdjacentCellsPositionsMapCells(map);
         _map = map;
     }
 
@@ -45,10 +48,10 @@ public class MapCell
     List<MapCell> getAdjacentCellsPositionsMapCells(Map map)
     {
         List<MapCell> cells = new List<MapCell>();
-        if (PositionInMap.x - 1 >= 0) cells.Add(new MapCell(map,new Vector2Int(PositionInMap.x-1,PositionInMap.y),States));
-        if (PositionInMap.x + 1 < map.RowsCount2) cells.Add(new MapCell(map,new Vector2Int(PositionInMap.x+1, PositionInMap.y),States));
-        if (PositionInMap.y - 1 >= 0) cells.Add(new MapCell(map,new Vector2Int(PositionInMap.x, PositionInMap.y-1),States));
-        if (PositionInMap.y + 1 < map.ColumnsCount2) cells.Add(new MapCell(map,new Vector2Int(PositionInMap.x, PositionInMap.y+1),States));
+        if (PositionInMap.x - 1 >= 0) cells.Add(map.MapCellsMatrix[PositionInMap.x-1,PositionInMap.y]);
+        if (PositionInMap.x + 1 < map.RowsCount) cells.Add(map.MapCellsMatrix[PositionInMap.x +1,PositionInMap.y]);
+        if (PositionInMap.y - 1 >= 0) cells.Add(map.MapCellsMatrix[PositionInMap.x, PositionInMap.y-1]);
+        if (PositionInMap.y + 1 < map.ColumnsCount) cells.Add(map.MapCellsMatrix[PositionInMap.x,PositionInMap.y +1]);
         return cells;
     }
 
@@ -135,13 +138,31 @@ public class MapCell
     public List<MapCell> navigateableNeighbours()
     {
         var result = new List<MapCell>();
+        List<TryUpdateAction> updateAdjacentCellsActions = new List<TryUpdateAction>();
         AdjacentCellsPositionsMapCells = getAdjacentCellsPositionsMapCells(_map);
-        foreach (var neighbours in AdjacentCellsPositionsMapCells )
+        RaycastHit hit;
+        var localPosition = new Vector3(_map._MapSize.x * _map._CellSize + _map._CellSize / 2, 0, _map._MapSize.y * _map._CellSize + _map._CellSize / 2);
+        foreach (var neighbours in AdjacentCellsPositionsMapCells)
         {
-            neighbours.isVisited = true;
-            result.Add(neighbours);
-            return result;
+            Debug.DrawLine(localPosition,localPosition + new Vector3(0,100,0),Color.blue,Mathf.Infinity);
+            var localPositionN = new Vector3(neighbours._map._MapSize.x * neighbours._map._CellSize + neighbours._map._CellSize / 2, 0, neighbours._map._MapSize.y * neighbours._map._CellSize + neighbours._map._CellSize /2);
+            var magniTudeRay =  (localPositionN - localPosition).magnitude;
+            if (Physics.Raycast(localPosition,localPositionN,out hit,magniTudeRay))
+            {
+                Debug.DrawRay(localPosition,localPositionN * hit.distance,Color.blue,Mathf.Infinity);
+                Debug.Log("hit");
+                break;
+            }
+            else
+            {
+                Debug.DrawRay(localPosition,localPositionN * 1000,Color.green,Mathf.Infinity);
+               
+                Debug.Log("not hit");
+                result.Add(neighbours);
+            }
+            //neighbours.isVisited = true;
         }
+       
         return result;
     }
     
