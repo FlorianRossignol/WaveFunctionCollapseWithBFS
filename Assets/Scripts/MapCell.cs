@@ -138,28 +138,26 @@ public class MapCell
     public List<MapCell> navigateableNeighbours()
     {
         var result = new List<MapCell>();
-        List<TryUpdateAction> updateAdjacentCellsActions = new List<TryUpdateAction>();
         AdjacentCellsPositionsMapCells = getAdjacentCellsPositionsMapCells(_map);
         RaycastHit hit;
         var localPosition = new Vector3(_map._MapSize.x * _map._CellSize + _map._CellSize / 2, 0, _map._MapSize.y * _map._CellSize + _map._CellSize / 2);
+        var localPosition2 = new Vector3(0 * _map._CellSize + _map._CellSize / 2, 0, 0 * _map._CellSize + _map._CellSize / 2);
         foreach (var neighbours in AdjacentCellsPositionsMapCells)
         {
             Debug.DrawLine(localPosition,localPosition + new Vector3(0,100,0),Color.blue,Mathf.Infinity);
-            var localPositionN = new Vector3(neighbours._map._MapSize.x * neighbours._map._CellSize + neighbours._map._CellSize / 2, 0, neighbours._map._MapSize.y * neighbours._map._CellSize + neighbours._map._CellSize /2);
-            var magniTudeRay =  (localPositionN - localPosition).magnitude;
-            if (Physics.Raycast(localPosition,localPositionN,out hit,magniTudeRay))
+            var localPositionN = new Vector3(neighbours._map._MapSize.x  * neighbours._map._CellSize + neighbours._map._CellSize / 2, 0, neighbours._map._MapSize.y * neighbours._map._CellSize + neighbours._map._CellSize /2);
+            var localPositionN2 = new Vector3(1 * neighbours._map._CellSize + neighbours._map._CellSize /2 , 0, 1 * neighbours._map._CellSize + neighbours._map._CellSize /2);
+            var magniTudeRay =  (localPositionN2 - localPosition2).magnitude;
+            if (Physics.Raycast(localPosition2,localPositionN2,out hit,magniTudeRay))
             {
-                Debug.DrawRay(localPosition,localPositionN * hit.distance,Color.blue,Mathf.Infinity);
+                Debug.DrawRay(localPosition2,localPositionN2 * hit.distance,Color.blue,Mathf.Infinity);
                 Debug.Log("hit");
                 break;
             }
-            else
-            {
-                Debug.DrawRay(localPosition,localPositionN * 1000,Color.green,Mathf.Infinity);
-               
-                Debug.Log("not hit");
-                result.Add(neighbours);
-            }
+
+            Debug.DrawRay(localPosition2,localPositionN2 * 1000,Color.green,Mathf.Infinity);
+            Debug.Log("not hit");
+            result.Add(neighbours);
             //neighbours.isVisited = true;
         }
        

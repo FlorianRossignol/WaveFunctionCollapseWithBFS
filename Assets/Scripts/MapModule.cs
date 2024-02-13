@@ -63,11 +63,16 @@ public class MapModule : MonoBehaviour
     
     public void InstantiateSpecificPrefab(Map map, Vector3 localPosition, MapModule prefab)
     {
-        
+        bool isInstanciante = false;
+        if (isInstanciante == false)
+        {
             var go = MonoBehaviour.Instantiate(prefab);
             go.transform.parent = map.transform;
             go.transform.localPosition = localPosition;
             go.transform.Rotate(Rotation);
+            isInstanciante = true;
+        }
+            
     }
     
 }

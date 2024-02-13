@@ -118,9 +118,10 @@ public class Map : MonoBehaviour
             for (int j = 0; j < _MapSize.y; j++)
             {
                 var localPosition = new Vector3(i * _CellSize, 0, j * _CellSize);
-                _firstMapModule.InstantiateSpecificPrefab(this,startModule,_firstMapModule);
-                _endMapModule.InstantiateSpecificPrefab(this,endModule,_endMapModule);
-                BFS(MapCellsMatrix[i,j],localPosition);
+                //_firstMapModule.InstantiateSpecificPrefab(this,startModule,_firstMapModule);
+                //_endMapModule.InstantiateSpecificPrefab(this,endModule,_endMapModule);
+                BFS(MapCellsMatrix[i,j]);
+                
                 MapCellsMatrix[i,j].States[0].InstantiatePrefab(this,localPosition);
             }
         }
@@ -133,7 +134,7 @@ public class Map : MonoBehaviour
             for (int j = 0; j < _MapSize.y; j++)
             {
                 var localPosition = new Vector3(i * _CellSize, 0, j * _CellSize);
-                BFS(MapCellsMatrix[i,j],localPosition);
+                BFS(MapCellsMatrix[i,j]);
             }
         }
     }
@@ -155,7 +156,7 @@ public class Map : MonoBehaviour
         return _ContactType.First(contact => contact.ContactTypes == contactType);
     }
     
-   public void BFS(MapCell v, Vector3 localPosition)
+   public void BFS(MapCell v)
    {
        //TODO profiler et avoir un résultat positif
         Queue<MapCell> queue = new Queue<MapCell>();
@@ -186,5 +187,5 @@ public class Map : MonoBehaviour
             }
         }
    }
-    
+   
 }
