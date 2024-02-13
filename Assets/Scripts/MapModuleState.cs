@@ -40,9 +40,12 @@ public class MapModuleState
 
    public void InstantiateSpecificPrefab(Map map, Vector3 localPosition, MapModule prefab)
    {
-      var go = MonoBehaviour.Instantiate(prefab);
-      go.transform.parent = map.transform;
-      go.transform.localPosition = localPosition;
-      go.transform.Rotate(Rotation);
+      for (int i = 0; i < 1; i++)
+      {
+         var go = MonoBehaviour.Instantiate(prefab);
+         go.transform.parent = map.transform;
+         go.transform.localPosition = localPosition;
+         go.transform.Rotate(Rotation);
+      }
    }
 }

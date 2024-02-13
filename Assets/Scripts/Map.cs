@@ -19,6 +19,8 @@ public class Map : MonoBehaviour
     [SerializeField] private List<MapModuleContact> _ContactType = new List<MapModuleContact>();
 
     public MapCell[,] MapCellsMatrix;
+
+    public MapCell[,] MapCellsMatrix2;
     
     [SerializeField] private MapModule _firstMapModule;
     [SerializeField] private MapModule _endMapModule;
@@ -27,16 +29,24 @@ public class Map : MonoBehaviour
     public int RowsCount => MapCellsMatrix.GetLength(0);
 
     public int ColumnsCount => MapCellsMatrix.GetLength(1);
+    
+    public int RowsCount2 => MapCellsMatrix2.GetLength(0);
+
+    public int ColumnsCount2 => MapCellsMatrix2.GetLength(1);
 
     private MapCell[] _mapCellsArray;
+
+    private MapCell[] _mapCellsArray2;
     // Start is called before the first frame update
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.L))
         {
-            InitializeMap();
-            FillCells();
-            CreateMap();
+            InitializeMap2();
+            CreateMapBfs();
+            //InitializeMap();
+            //FillCells();
+            //CreateMap();
         }
     }
 
@@ -54,6 +64,25 @@ public class Map : MonoBehaviour
         }
 
         _mapCellsArray = MapCellsMatrix.Cast<MapCell>().ToArray();
+    }
+
+    void InitializeMap2()
+    {
+        MapCellsMatrix2 = new MapCell[_MapSize.x, _MapSize.y];
+
+        var mapModules = new List<MapModule>();
+        mapModules.Add(_firstMapModule);
+        mapModules.Add(_pathMapModule);
+        mapModules.Add(_endMapModule);
+        for (int i = 0; i < _MapSize.x; i++)
+        {
+            for (int j = 0; j < _MapSize.y; j++)
+            {
+               MapCellsMatrix2[i, j] = new MapCell(this, new Vector2Int(i, j));
+            }
+        }
+
+        _mapCellsArray2 = MapCellsMatrix2.Cast<MapCell>().ToArray();
     }
 
     
@@ -87,8 +116,18 @@ public class Map : MonoBehaviour
             for (int j = 0; j < _MapSize.y; j++)
             {
                 var localPosition = new Vector3(i * _CellSize, 0, j * _CellSize);
-                BFS(MapCellsMatrix[i,j]);
                 MapCellsMatrix[i,j].States[0].InstantiatePrefab(this,localPosition);
+            }
+        }
+    }
+
+    void CreateMapBfs()
+    {
+        for (int i = 0; i < _MapSize.x; i++)
+        {
+            for (int j = 0; j < _MapSize.y; j++)
+            {
+                BFS(MapCellsMatrix2[i,j]);
             }
         }
     }
@@ -103,6 +142,7 @@ public class Map : MonoBehaviour
 
         return mapModules;
     }
+    
 
     public MapModuleContact GetContact(string contactType)
     {
@@ -120,24 +160,24 @@ public class Map : MonoBehaviour
             {
                 v.isVisited = true;
                 queue.Enqueue(v);
-                var first = queue.Peek();
+                //var first = queue.Peek();
                 var localPosition = new Vector3(i * _CellSize, 0, j * _CellSize);
-                /*if (v == first)
-                {
-                    MapCellsMatrix[i,j].States[0].InstantiateSpecificPrefab(this,localPosition,_firstMapModule);
-                }*/
+                MapCellsMatrix2[i,j].States[0].InstantiateSpecificPrefab(this,localPosition,_firstMapModule);
                 while (queue.Count > 0)
                 {
                     v = queue.Dequeue();
-                    while (v.isVisited == false)
+                    
+                    foreach (var variableNeighbour in v.navigateableNeighbours())
                     {
-                        foreach (var variableNeighbour in v.navigateableNeighbours())
+                        if (variableNeighbour.isVisited == false)
                         {
-                            //MapCellsMatrix[i,j].States[0].InstantiateSpecificPrefab(this,localPosition,_pathMapModule);
+                           MapCellsMatrix2[i,j].States[0].InstantiateSpecificPrefab(this,localPosition,_pathMapModule);
                             queue.Enqueue(variableNeighbour);
-                            //MapCellsMatrix[i,j].States[0].InstantiateSpecificPrefab(this,localPosition,_endMapModule);
+                            MapCellsMatrix2[i,j].States[0].InstantiateSpecificPrefab(this,localPosition,_endMapModule);
                         }
+                    
                     }
+                    
                 }
             }
         

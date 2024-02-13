@@ -25,8 +25,12 @@ public class MapCell
         AdjacentCellsPositions = GetAdjacentCellsPositions(map);
         _map = map;
     }
-    
-    
+
+    public MapCell(Map map, Vector2Int positionInMap)
+    {
+        PositionInMap = positionInMap;
+        _map = map;
+    }
 
     List<Vector2Int> GetAdjacentCellsPositions(Map map)
     {
@@ -42,9 +46,9 @@ public class MapCell
     {
         List<MapCell> cells = new List<MapCell>();
         if (PositionInMap.x - 1 >= 0) cells.Add(new MapCell(map,new Vector2Int(PositionInMap.x-1,PositionInMap.y),States));
-        if (PositionInMap.x + 1 < map.RowsCount) cells.Add(new MapCell(map,new Vector2Int(PositionInMap.x+1, PositionInMap.y),States));
+        if (PositionInMap.x + 1 < map.RowsCount2) cells.Add(new MapCell(map,new Vector2Int(PositionInMap.x+1, PositionInMap.y),States));
         if (PositionInMap.y - 1 >= 0) cells.Add(new MapCell(map,new Vector2Int(PositionInMap.x, PositionInMap.y-1),States));
-        if (PositionInMap.y + 1 < map.ColumnsCount) cells.Add(new MapCell(map,new Vector2Int(PositionInMap.x, PositionInMap.y+1),States));
+        if (PositionInMap.y + 1 < map.ColumnsCount2) cells.Add(new MapCell(map,new Vector2Int(PositionInMap.x, PositionInMap.y+1),States));
         return cells;
     }
 
@@ -134,7 +138,7 @@ public class MapCell
         AdjacentCellsPositionsMapCells = getAdjacentCellsPositionsMapCells(_map);
         foreach (var neighbours in AdjacentCellsPositionsMapCells )
         {
-            isVisited = true;
+            neighbours.isVisited = true;
             result.Add(neighbours);
             return result;
         }
