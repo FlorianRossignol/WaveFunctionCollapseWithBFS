@@ -262,8 +262,8 @@ MonoBehaviour:
   _map: {fileID: 1945584741469305949, guid: 567b88755a6d533498532ef2692c544d, type: 3}
   _forwardContactType: Ground
   _backContactType: Ground
-  _rightContactType: Wall
-  _leftContactType: Wall
+  _rightContactType: Ground
+  _leftContactType: Ground
 --- !u!1 &5605175334615186552
 GameObject:
   m_ObjectHideFlags: 0

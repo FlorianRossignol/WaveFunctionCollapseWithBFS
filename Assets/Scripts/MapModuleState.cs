@@ -43,9 +43,11 @@ public class MapModuleState
       for (int i = 0; i < 1; i++)
       {
          var go = MonoBehaviour.Instantiate(prefab);
+         
          go.transform.parent = map.transform;
          go.transform.localPosition = localPosition;
          go.transform.Rotate(Rotation);
+         
       }
    }
 }

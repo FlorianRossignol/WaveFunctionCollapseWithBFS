@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 
@@ -139,28 +140,13 @@ public class MapCell
     {
         var result = new List<MapCell>();
         AdjacentCellsPositionsMapCells = getAdjacentCellsPositionsMapCells(_map);
-        RaycastHit hit;
-        var localPosition = new Vector3(_map._MapSize.x * _map._CellSize + _map._CellSize / 2, 0, _map._MapSize.y * _map._CellSize + _map._CellSize / 2);
-        var localPosition2 = new Vector3(0 * _map._CellSize + _map._CellSize / 2, 0, 0 * _map._CellSize + _map._CellSize / 2);
         foreach (var neighbours in AdjacentCellsPositionsMapCells)
         {
-            Debug.DrawLine(localPosition,localPosition + new Vector3(0,100,0),Color.blue,Mathf.Infinity);
-            var localPositionN = new Vector3(neighbours._map._MapSize.x  * neighbours._map._CellSize + neighbours._map._CellSize / 2, 0, neighbours._map._MapSize.y * neighbours._map._CellSize + neighbours._map._CellSize /2);
-            var localPositionN2 = new Vector3(1 * neighbours._map._CellSize + neighbours._map._CellSize /2 , 0, 1 * neighbours._map._CellSize + neighbours._map._CellSize /2);
-            var magniTudeRay =  (localPositionN2 - localPosition2).magnitude;
-            if (Physics.Raycast(localPosition2,localPositionN2,out hit,magniTudeRay))
+            if (_mapCellCashe.ContainsKey(neighbours))
             {
-                Debug.DrawRay(localPosition2,localPositionN2 * hit.distance,Color.blue,Mathf.Infinity);
-                Debug.Log("hit");
-                break;
+                result.Add(neighbours);
             }
-
-            Debug.DrawRay(localPosition2,localPositionN2 * 1000,Color.green,Mathf.Infinity);
-            Debug.Log("not hit");
-            result.Add(neighbours);
-            //neighbours.isVisited = true;
         }
-       
         return result;
     }
     
