@@ -144,6 +144,7 @@ public class MapCell
         {
             if (_mapCellCashe.ContainsKey(neighbours))
             {
+                
                 result.Add(neighbours);
             }
         }

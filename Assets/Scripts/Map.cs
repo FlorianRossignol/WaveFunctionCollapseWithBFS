@@ -48,7 +48,7 @@ public class Map : MonoBehaviour
             FillCells();
             //CreateMapBfs();
             CreateMap();
-            BFS(MapCellsMatrix[0,0], MapCellsMatrix[_MapSize.x,_MapSize.y]);
+            BFS(_mapCellsArray.First(),_mapCellsArray.Last());
             
         }
     }
