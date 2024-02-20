@@ -142,10 +142,12 @@ public class MapCell
         AdjacentCellsPositionsMapCells = getAdjacentCellsPositionsMapCells(_map);
         foreach (var neighbours in AdjacentCellsPositionsMapCells)
         {
-            if (_mapCellCashe.ContainsKey(neighbours))
+            for (int i = 0; i < _mapCellCashe.Count; i++)
             {
-                
-                result.Add(neighbours);
+                if (_mapCellCashe.ContainsKey(neighbours))
+                {
+                    result.Add(neighbours);
+                }
             }
         }
         return result;

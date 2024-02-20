@@ -41,15 +41,21 @@ public class Map : MonoBehaviour
     
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.L))
+        for (int i = 0; i < 1; i++)
         {
-            InitializeMap();
-            InstanciateStartEndModuleForBfs();
-            FillCells();
-            //CreateMapBfs();
-            CreateMap();
-            BFS(_mapCellsArray.First(),_mapCellsArray.Last());
+            Profiler.BeginSample("UpdateLoopProfiling");
+            Debug.Log("Update Profiling");
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                InitializeMap();
+                InstanciateStartEndModuleForBfs();
+                FillCells();
+                CreateMapBfs();
+                CreateMap();
+                BFS(_mapCellsArray.First(),_mapCellsArray.Last());
             
+            }
+            Profiler.EndThreadProfiling();
         }
     }
 
@@ -91,8 +97,6 @@ public class Map : MonoBehaviour
     
     void FillCells()
     {
-        Profiler.BeginSample("Waaaaaaaaave");
-        Debug.Log("code profiling");
         MapCell cell = null;
        
         do
@@ -109,7 +113,7 @@ public class Map : MonoBehaviour
          
         } 
         while (cell.TrySelectState(states => states[Random.Range(0,states.Count)]));
-        Profiler.EndThreadProfiling();
+       
     }
 
     void CreateMap()
@@ -197,5 +201,35 @@ public class Map : MonoBehaviour
         Debug.Log(" not found path !");
         return false;
    }
-   
+
+   /*void PrefabBfs()
+   {
+       if (BFS(_mapCellsArray.First(),_mapCellsArray.Last()) == true)
+       {
+           var nextpos = GetNextElement(_mapCellsArray.First(), _mapCellsArray.First());
+           var localPos = new Vector3(nextpos.PositionInMap.x, 0, nextpos.PositionInMap.y);
+           _pathMapModule.InstantiateSpecificPrefab(this,localPos,_pathMapModule);
+       }
+   }*/
+
+   /*private Array GetNextElement(MapCell array, int index)
+   {
+       var MapCellArray = array.ConvertTo<Array>();
+       var lol2 = index.ConvertTo<int>();
+       if (lol2 > MapCellArray.Length -1 || lol2 < 0)
+       {
+           throw new Exception("Invalid Index");
+       }
+       else if (lol2 == MapCellArray.Length - 1)
+       {
+           lol2 = 0;
+       }
+       else
+       {
+           lol2++;
+       }
+       
+       return MapCellArray[lol2];
+   }*/
+
 }
